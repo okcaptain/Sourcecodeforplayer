@@ -328,41 +328,41 @@ short Avs3ParseBsFrameHeader(
 }
 
 
-// short ReadBitstream(AVS3DecoderHandle hAvs3Dec, FILE* fBitstream) 
-// {
-//     short bytesPerFrame = 0;
+short ReadBitstream(AVS3DecoderHandle hAvs3Dec, FILE* fBitstream) 
+{
+    short bytesPerFrame = 0;
 
-//     uint8_t* bitstream = hAvs3Dec->hBitstream->bitstream;
+    uint8_t* bitstream = hAvs3Dec->hBitstream->bitstream;
 
-// #ifdef CRC_CHECK
-//     uint16_t crcBs = 0, crcResult = 0;          // crc info from BS and calculated at decoder
-// #endif
+#ifdef CRC_CHECK
+    uint16_t crcBs = 0, crcResult = 0;          // crc info from BS and calculated at decoder
+#endif
 
-//     if (fBitstream == NULL) 
-//     {
-//         return AVS3_FALSE;
-//     }
+    if (fBitstream == NULL) 
+    {
+        return AVS3_FALSE;
+    }
 
-// #ifdef BS_HEADER_COMPAT
-//     /* Read frame header info */
-//     Avs3ParseBsFrameHeader(hAvs3Dec, fBitstream, 0, &crcBs);
-// #endif
+#ifdef BS_HEADER_COMPAT
+    /* Read frame header info */
+    Avs3ParseBsFrameHeader(hAvs3Dec, fBitstream, 0, &crcBs);
+#endif
 
-//     bytesPerFrame = (uint32_t)(ceil((float)hAvs3Dec->bitsPerFrame / 8));
+    bytesPerFrame = (uint32_t)(ceil((float)hAvs3Dec->bitsPerFrame / 8));
 
-//     /* frame payload */
-//     fread(bitstream, sizeof(uint8_t), bytesPerFrame, fBitstream);
+    /* frame payload */
+    fread(bitstream, sizeof(uint8_t), bytesPerFrame, fBitstream);
 
-// #ifdef CRC_CHECK
-//     /* CRC check */
-//     crcResult = Crc16(bitstream, bytesPerFrame);
-//     if (crcResult != crcBs) {
-//         return AVS3_FALSE;
-//     }
-// #endif
+#ifdef CRC_CHECK
+    /* CRC check */
+    crcResult = Crc16(bitstream, bytesPerFrame);
+    if (crcResult != crcBs) {
+        return AVS3_FALSE;
+    }
+#endif
 
-//     return AVS3_TRUE;
-// }
+    return AVS3_TRUE;
+}
 
 uint16_t GetNextIndice(uint8_t *bitstream, uint32_t *nextBitPos, int16_t numBits)
 {

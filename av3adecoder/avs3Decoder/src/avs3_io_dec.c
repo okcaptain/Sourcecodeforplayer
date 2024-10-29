@@ -21,147 +21,147 @@
 #include "avs3_prot_dec.h"
 
 
-// void GetAvs3DecoderCommandLine(AVS3DecoderHandle hAvs3Dec, const int argc, char *argv[], FILE **fBitstream, FILE **fOutput)
-// {
-//     short i = 1;
+void GetAvs3DecoderCommandLine(AVS3DecoderHandle hAvs3Dec, const int argc, char *argv[], FILE **fBitstream, FILE **fOutput)
+{
+    short i = 1;
 
-// #ifndef BS_HEADER_COMPAT
-//     int tmp;
+#ifndef BS_HEADER_COMPAT
+    int tmp;
 
-//     while (i < argc - 3)
-//     {
-//         if (strcmp(toUpper(argv[i]), "-MONO") == 0)
-//         {
-// #ifdef MONO_INTEGRATE
-//             hAvs3Dec->avs3CodecFormat = AVS3_MONO_FORMAT;
-// #else
-//             hAvs3Dec->avs3CodecFormat = AVS3_STEREO_FORMAT;
-// #endif
-//             hAvs3Dec->avs3CodecCore = AVS3_MDCT_CORE;
-//             hAvs3Dec->numChansOutput = 1;
+    while (i < argc - 3)
+    {
+        if (strcmp(toUpper(argv[i]), "-MONO") == 0)
+        {
+#ifdef MONO_INTEGRATE
+            hAvs3Dec->avs3CodecFormat = AVS3_MONO_FORMAT;
+#else
+            hAvs3Dec->avs3CodecFormat = AVS3_STEREO_FORMAT;
+#endif
+            hAvs3Dec->avs3CodecCore = AVS3_MDCT_CORE;
+            hAvs3Dec->numChansOutput = 1;
 
-//             i++;
-//         }
-//         else if (strcmp(toUpper(argv[i]), "-STEREO") == 0)
-//         {
-//             hAvs3Dec->avs3CodecFormat = AVS3_STEREO_FORMAT;
-//             hAvs3Dec->avs3CodecCore = AVS3_MDCT_CORE;
-//             hAvs3Dec->numChansOutput = STEREO_CHANNELS;
+            i++;
+        }
+        else if (strcmp(toUpper(argv[i]), "-STEREO") == 0)
+        {
+            hAvs3Dec->avs3CodecFormat = AVS3_STEREO_FORMAT;
+            hAvs3Dec->avs3CodecCore = AVS3_MDCT_CORE;
+            hAvs3Dec->numChansOutput = STEREO_CHANNELS;
 
-//             i++;
-//         }
-//         else if (strcmp(toUpper(argv[i]), "-MC") == 0)
-//         {
-// #ifdef MC_ENABLE
-//             i++;
-//             hAvs3Dec->avs3CodecFormat = AVS3_MC_FORMAT;
-//             hAvs3Dec->avs3CodecCore = AVS3_MDCT_CORE;
-//             if (i < argc - 3)
-//             {
-//                 if (sscanf(argv[i], "%d", &tmp) > 0)
-//                 {
-//                     i++;
-//                 }
-//             }
-//             hAvs3Dec->numChansOutput = tmp;
-// #endif
-//         }
-//         else if (strcmp(toUpper(argv[i]), "-HOA") == 0)
-//         {
-//             i++;
-//             hAvs3Dec->avs3CodecFormat = AVS3_HOA_FORMAT;
-//             hAvs3Dec->avs3CodecCore = AVS3_MDCT_CORE;
+            i++;
+        }
+        else if (strcmp(toUpper(argv[i]), "-MC") == 0)
+        {
+#ifdef MC_ENABLE
+            i++;
+            hAvs3Dec->avs3CodecFormat = AVS3_MC_FORMAT;
+            hAvs3Dec->avs3CodecCore = AVS3_MDCT_CORE;
+            if (i < argc - 3)
+            {
+                if (sscanf(argv[i], "%d", &tmp) > 0)
+                {
+                    i++;
+                }
+            }
+            hAvs3Dec->numChansOutput = tmp;
+#endif
+        }
+        else if (strcmp(toUpper(argv[i]), "-HOA") == 0)
+        {
+            i++;
+            hAvs3Dec->avs3CodecFormat = AVS3_HOA_FORMAT;
+            hAvs3Dec->avs3CodecCore = AVS3_MDCT_CORE;
 
-//             if (i < argc - 3)
-//             {
-//                 if (sscanf(argv[i], "%d", &tmp) > 0)
-//                 {
-//                     i++;
-//                 }
-//             }
+            if (i < argc - 3)
+            {
+                if (sscanf(argv[i], "%d", &tmp) > 0)
+                {
+                    i++;
+                }
+            }
 
-//             switch (tmp)
-//             {
-//             case 0:
-//                 hAvs3Dec->numChansOutput = 1;
-//                 break;
-//             case 1:
-//                 hAvs3Dec->numChansOutput = 4;
-//                 break;
-//             case 2:
-//                 hAvs3Dec->numChansOutput = 9;
-//                 break;
-//             case 3:
-//                 hAvs3Dec->numChansOutput = 16;
-//                 break;
-//             case 4:
-//                 hAvs3Dec->numChansOutput = 25;
-//                 break;
-//             default:
-//                 break;
-//             }
-//         }
-//         else
-//         {
-//             assert("!Not support codec format in AVS3!\n");
-//         }
-//     }
+            switch (tmp)
+            {
+            case 0:
+                hAvs3Dec->numChansOutput = 1;
+                break;
+            case 1:
+                hAvs3Dec->numChansOutput = 4;
+                break;
+            case 2:
+                hAvs3Dec->numChansOutput = 9;
+                break;
+            case 3:
+                hAvs3Dec->numChansOutput = 16;
+                break;
+            case 4:
+                hAvs3Dec->numChansOutput = 25;
+                break;
+            default:
+                break;
+            }
+        }
+        else
+        {
+            assert("!Not support codec format in AVS3!\n");
+        }
+    }
 
-//     /* Output sampling rate */
-//     if (i < argc - 2)
-//     {
-//         hAvs3Dec->outputFs = (long)(atoi(argv[i]) * 1000);
+    /* Output sampling rate */
+    if (i < argc - 2)
+    {
+        hAvs3Dec->outputFs = (long)(atoi(argv[i]) * 1000);
 
-//         hAvs3Dec->frameLength = GetFrameLength(hAvs3Dec->outputFs);
+        hAvs3Dec->frameLength = GetFrameLength(hAvs3Dec->outputFs);
 
-//         i++;
-//     }
-//     else
-//     {
-//         fprintf(stderr, "Error: Sampling rate is not supported in AVS3!\n");
-//         exit(-1);
-//     }
-// #endif
+        i++;
+    }
+    else
+    {
+        fprintf(stderr, "Error: Sampling rate is not supported in AVS3!\n");
+        exit(-1);
+    }
+#endif
 
-//     /* Bitstream */
-//     if (i < argc - 1)
-//     {
-//         if ((*fBitstream = fopen(argv[i], "rb")) == NULL)
-//         {
-//             fprintf(stderr, "Error: Bitstream file %s can not be opened!\n", argv[i]);
-//             exit(-1);
-//         }
+    /* Bitstream */
+    if (i < argc - 1)
+    {
+        if ((*fBitstream = fopen(argv[i], "rb")) == NULL)
+        {
+            fprintf(stderr, "Error: Bitstream file %s can not be opened!\n", argv[i]);
+            exit(-1);
+        }
 
-// #ifdef BS_HEADER_COMPAT
-//         /* Read bitstream file header info */
-//         Avs3ParseBsFrameHeader(hAvs3Dec, *fBitstream, 1, NULL);
-// #endif
+#ifdef BS_HEADER_COMPAT
+        /* Read bitstream file header info */
+        Avs3ParseBsFrameHeader(hAvs3Dec, *fBitstream, 1, NULL);
+#endif
 
-//         i++;
-//     }
+        i++;
+    }
 
-//     /* Output file */
-//     if (i < argc)
-//     {
-//         const char* strSuffix = ".wav";
-//         const char* startPtr = strrchr(argv[i], '.');
+    /* Output file */
+    if (i < argc)
+    {
+        const char* strSuffix = ".wav";
+        const char* startPtr = strrchr(argv[i], '.');
 
-//         if (strncmp(startPtr, strSuffix, strlen(strSuffix)) == 0)
-//         {
-//             *fOutput = WriteWavHeader(argv[i], hAvs3Dec->numChansOutput, hAvs3Dec->outputFs);
-//         }
-//         else
-//         {
-//             if ((*fOutput = fopen(argv[i], "wb+")) == NULL)
-//             {
-//                 fprintf(stderr, "Error: Output file %s can not be opened!\n", argv[i]);
-//                 exit(-1);
-//             }
-//         }
-//     }
+        if (strncmp(startPtr, strSuffix, strlen(strSuffix)) == 0)
+        {
+            *fOutput = WriteWavHeader(argv[i], hAvs3Dec->numChansOutput, hAvs3Dec->outputFs);
+        }
+        else
+        {
+            if ((*fOutput = fopen(argv[i], "wb+")) == NULL)
+            {
+                fprintf(stderr, "Error: Output file %s can not be opened!\n", argv[i]);
+                exit(-1);
+            }
+        }
+    }
 
-//     return;
-// }
+    return;
+}
 
 void WriteSynthData(const short* data, FILE* file, const short nChans, const short frameLength)
 {

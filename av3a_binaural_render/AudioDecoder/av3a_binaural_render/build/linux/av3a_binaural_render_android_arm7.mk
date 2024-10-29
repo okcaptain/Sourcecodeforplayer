@@ -3,13 +3,13 @@
 ## any manual changes will be erased      
 ##
 ## Release
-NDK=/root/android-ndk-r20b
+# NDK=/home/yogiczy/media3/android-ndk-r27
 #NDK=/home/wwzhang/android-ndk
 TOOLCHAIN=$(NDK)/toolchains/llvm/prebuilt/linux-x86_64
 
 ARCH=arm
 CPU=armv7-a
-API=24
+API=21
 CC=$(TOOLCHAIN)/bin/armv7a-linux-androideabi$(API)-clang
 CXX=$(TOOLCHAIN)/bin/armv7a-linux-androideabi$(API)-clang++
 SYSROOT=$(TOOLCHAIN)/sysroot
@@ -42,7 +42,7 @@ OutputSwitch           :=-o
 LibraryPathSwitch      :=-L
 PreprocessorSwitch     :=-D
 SourceSwitch           :=-c 
-OutputFile             :=../../../../bin/linux/lib$(ProjectName).so
+OutputFile             :=../../../../bin/armeabi-v7a/lib$(ProjectName).a
 # OutputFile             :=/mnt/data/local-disk1/yfxu/linux/lib$(ProjectName).so
 Preprocessors          :=$(PreprocessorSwitch)HAVE_CONFIG_H 
 ObjectSwitch           :=-o 
@@ -92,13 +92,19 @@ Objects=$(Objects0)
 .PHONY: all clean PreBuild PrePreBuild PostBuild
 all: $(OutputFile)
 
-$(OutputFile): $(IntermediateDirectory)/.d $(Objects) 
-	@$(MakeDirCommand) $(@D)
-	@echo "" > $(IntermediateDirectory)/.d
-	@echo $(Objects0)  > $(ObjectsFileList)
-	$(SharedObjectLinkerName) $(OutputSwitch)$(OutputFile) @$(ObjectsFileList) $(LibPath) $(Libs) $(LinkOptions)
+#$(OutputFile): $(IntermediateDirectory)/.d $(Objects) 
+#	@$(MakeDirCommand) $(@D)
+#	@echo "" > $(IntermediateDirectory)/.d
+#	@echo $(Objects0)  > $(ObjectsFileList)
+#	$(SharedObjectLinkerName) $(OutputSwitch)$(OutputFile) @$(ObjectsFileList) $(LibPath) $(Libs) $(LinkOptions)
 # @$(MakeDirCommand) "/mnt/data/remote/yfxu_coding/myworkspace/.build-release"
 # @echo rebuilt > "/mnt/data/remote/yfxu_coding/myworkspace/.build-release/av3a_binaural_render"
+
+$(OutputFile): $(IntermediateDirectory)/.d $(Objects)
+	@$(MakeDirCommand) $(@D)
+	@echo "" > $(IntermediateDirectory)/.d
+	@echo $(Objects0) > $(ObjectsFileList)
+	$(AR) $(OutputFile) @$(ObjectsFileList)
 
 $(IntermediateDirectory)/.d:
 	@test -d ./Release || $(MakeDirCommand) ./Release

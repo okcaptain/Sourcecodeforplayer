@@ -4,12 +4,12 @@
 ###             generated for LINUX environments
 ###             by shengyancong
 ###
-NDK=/root/android-ndk-r20b
+# NDK=/home/yogiczy/media3/android-ndk-r27
 TOOLCHAIN=$(NDK)/toolchains/llvm/prebuilt/linux-x86_64
 
 ARCH=arm64
 CPU=armv8-a
-API=24
+API=21
 CC=$(TOOLCHAIN)/bin/aarch64-linux-android$(API)-clang
 CXX=$(TOOLCHAIN)/bin/aarch64-linux-android$(API)-clang++
 SYSROOT=$(TOOLCHAIN)/sysroot
@@ -17,7 +17,7 @@ CROSS=aarch64-linux-android
 CROSS_PREFIX=$(TOOLCHAIN)/bin/$(CROSS)
 OPTIMIZE_CFLAGS="-march=$(CPU)"
 
-NAME = libAVS3AudioDec.so
+NAME = libAVS3AudioDec.a
 OS_ARCH := aarch64
 ### include debug information: 1=yes, 0=no
 DBG?= 0
@@ -92,7 +92,7 @@ CFLAGS += -DANDROID -Wl,--no-undefined -Wl,--retain-symbols-file=retain_symbols.
 
 SRC_DIRS=../../src ../../../libavs3_common ../../../libavs3_debug
 SRC=$(foreach TMP_SRC_DIRS, $(SRC_DIRS), $(wildcard $(TMP_SRC_DIRS)/*.c)) 
-TARGET=../../../../../../../bin/linux/libAVS3AudioDec.so
+TARGET=../../../bin/arm64-v8a/libAVS3AudioDec.a
 OBJ:=$(SRC:.c=.o)
 
 LIB_EXTERN=-L../../lib/  -L../../deps/lib
@@ -131,8 +131,8 @@ distclean: clean
 bin:    $(OBJ)
 	@echo
 	@echo 'creating binary "$(TARGET)"'
-	@$(CC) -shared -fPIC $(CFLAGS) -o $(TARGET) $(OBJ) $(DEP_LIB)
-
+	#@$(CC) -shared -fPIC $(CFLAGS) -o $(TARGET) $(OBJ) $(DEP_LIB)
+	@ar rcs $(TARGET) $(OBJ)  # 使用 ar 命令打包成静态库
 	@echo '... done'
 	@echo
 

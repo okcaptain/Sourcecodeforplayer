@@ -184,26 +184,26 @@ static void check_color_terminal(void)
 
 static void ansi_fputs(int level, int tint, const char *str, int local_use_color)
 {
-    if (local_use_color == 1) {
-        fprintf(stderr,
-                "\033[%"PRIu32";3%"PRIu32"m%s\033[0m",
-                (color[level] >> 4) & 15,
-                color[level] & 15,
-                str);
-    } else if (tint && use_color == 256) {
-        fprintf(stderr,
-                "\033[48;5;%"PRIu32"m\033[38;5;%dm%s\033[0m",
-                (color[level] >> 16) & 0xff,
-                tint,
-                str);
-    } else if (local_use_color == 256) {
-        fprintf(stderr,
-                "\033[48;5;%"PRIu32"m\033[38;5;%"PRIu32"m%s\033[0m",
-                (color[level] >> 16) & 0xff,
-                (color[level] >> 8) & 0xff,
-                str);
-    } else
-        fputs(str, stderr);
+    // if (local_use_color == 1) {
+    //     fprintf(stderr,
+    //             "\033[%"PRIu32";3%"PRIu32"m%s\033[0m",
+    //             (color[level] >> 4) & 15,
+    //             color[level] & 15,
+    //             str);
+    // } else if (tint && use_color == 256) {
+    //     fprintf(stderr,
+    //             "\033[48;5;%"PRIu32"m\033[38;5;%dm%s\033[0m",
+    //             (color[level] >> 16) & 0xff,
+    //             tint,
+    //             str);
+    // } else if (local_use_color == 256) {
+    //     fprintf(stderr,
+    //             "\033[48;5;%"PRIu32"m\033[38;5;%"PRIu32"m%s\033[0m",
+    //             (color[level] >> 16) & 0xff,
+    //             (color[level] >> 8) & 0xff,
+    //             str);
+    // } else
+    //     fputs(str, stderr);
 }
 
 static void colored_fputs(int level, int tint, const char *str)
@@ -376,12 +376,12 @@ void av_log_default_callback(void* ptr, int level, const char* fmt, va_list vl)
     if (print_prefix && (flags & AV_LOG_SKIP_REPEATED) && !strcmp(line, prev) &&
         *line && line[strlen(line) - 1] != '\r'){
         count++;
-        if (is_atty == 1)
-            fprintf(stderr, "    Last message repeated %d times\r", count);
+        // if (is_atty == 1)
+        //     fprintf(stderr, "    Last message repeated %d times\r", count);
         goto end;
     }
     if (count > 0) {
-        fprintf(stderr, "    Last message repeated %d times\n", count);
+        // fprintf(stderr, "    Last message repeated %d times\n", count);
         count = 0;
     }
     strcpy(prev, line);

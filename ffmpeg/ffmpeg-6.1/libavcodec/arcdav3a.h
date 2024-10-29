@@ -33,6 +33,27 @@ typedef void (*PFavs3_destroy_decoder)(AVS3DecoderHandle hAvs3Dec);
 typedef int (*PFparse_header)(AVS3DecoderHandle hAvs3Dec, unsigned char* pData, int nLenIn, int isInitFrame, int *pnLenConsumed, unsigned short *crc);
 typedef int (*PFavs3_decode)(AVS3DecoderHandle hAvs3Dec, unsigned char* pDataIN, int nLenIn, unsigned char* pDataOut, int *pnLenOut, int *pnLenConsumed);
 
+void *CreateRenderer(Avs3MetaData *metadata, int sampleRate, int blockSize);
+
+// int PutPlanarAudioBuffer(void* render, const float **buffer, int frameNum, int channelNum);
+
+int PutInterleavedAudioBuffer(void *render, const float *buffer, int frameNum, int channelNum);
+
+// int GetBinauralPlanarAudioBuffer(void* render, float **buffer, int frameNum);
+
+int GetBinauralInterleavedAudioBuffer(void *render, float *buffer, int frameNum);
+
+int UpdateMetadata(void *render, Avs3MetaData *metadata);
+
+int SetListenerPosition(void *render, float *position, float *front, float *up);
+
+int DestroyRenderer(void *render);
+
+AVS3DecoderHandle avs3_create_decoder();
+void avs3_destroy_decoder(AVS3DecoderHandle hAvs3Dec);
+int parse_header(AVS3DecoderHandle hAvs3Dec, unsigned char *pData, int nLenIn, int isInitFrame, int *pnLenConsumed, unsigned short *crc);
+int avs3_decode(AVS3DecoderHandle hAvs3Dec, unsigned char *pDataIN, int nLenIn, unsigned char *pDataOut, int *pnLenOut, int *pnLenConsumed);
+
 #ifdef __cplusplus
 }
 #endif

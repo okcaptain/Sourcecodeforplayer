@@ -14,6 +14,8 @@ limitations under the License.
 
 #ifndef AVS3_RENDER_UTILS_H
 #define AVS3_RENDER_UTILS_H
+#include <string>
+#include <vector>
 
 inline std::vector<std::string> splitString(std::string &msg, std::string &split) {
     std::string::size_type pos1, pos2;

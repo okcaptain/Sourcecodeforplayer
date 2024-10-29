@@ -8,18 +8,18 @@
 TOOLCHAIN=$(NDK)/toolchains/llvm/prebuilt/linux-x86_64
 
 ARCH=arm
-CPU=armv7-a
+CPU=x86_64
 API=21
-CC=$(TOOLCHAIN)/bin/armv7a-linux-androideabi$(API)-clang
-CXX=$(TOOLCHAIN)/bin/armv7a-linux-androideabi$(API)-clang++
+CC=$(TOOLCHAIN)/bin/x86_64-linux-android$(API)-clang
+CXX=$(TOOLCHAIN)/bin/x86_64-linux-android$(API)-clang++
 SYSROOT=$(TOOLCHAIN)/sysroot
-CROSS=arm-linux-androideabi
+CROSS=arm-linux-android
 CROSS_PREFIX=$(TOOLCHAIN)/bin/$(CROSS)
 OPTIMIZE_CFLAGS="-march=$(CPU) -mfloat-abi=softfp -mfpu=vfp -marm"
 ADDI_LDFLAGS="-ldl -L../dependency/linux/arm"
 
 NAME = libAVS3AudioDec.a
-OS_ARCH := aarch64
+OS_ARCH := x86_64
 ### include debug information: 1=yes, 0=no
 DBG?= 0
 ### Generate 32 bit executable : 1=yes, 0=no
@@ -93,7 +93,7 @@ CFLAGS += -DANDROID -Wl,--no-undefined -Wl,--retain-symbols-file=retain_symbols.
 
 SRC_DIRS=../../src ../../../libavs3_common ../../../libavs3_debug
 SRC=$(foreach TMP_SRC_DIRS, $(SRC_DIRS), $(wildcard $(TMP_SRC_DIRS)/*.c)) 
-TARGET=../../../bin/armeabi-v7a/libAVS3AudioDec.a
+TARGET=../../../bin/x86_64/libAVS3AudioDec.a
 OBJ:=$(SRC:.c=.o)
 
 LIB_EXTERN=-L../../lib/  -L../../deps/lib

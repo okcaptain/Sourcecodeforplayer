@@ -75,6 +75,20 @@ inline bool IsAlignedTemplated(const T* pointer) {
     return reinterpret_cast<uintptr_t>(pointer) % kSimdSizeBytes == 0;
 }
 
+inline float FastReciprocalSqrt(float input)
+{
+    const float kThreeHalfs = 1.5f;
+    const uint32_t kMagicNumber = 0x5f3759df;
+
+    // Approximate a logarithm by aliasing to an integer.
+    uint32_t integer = *reinterpret_cast<uint32_t *>(&input);
+    integer = kMagicNumber - (integer >> 1);
+    float approximation = *reinterpret_cast<float *>(&integer);
+    const float half_input = input * 0.5f;
+    // One iteration of Newton's method.
+    return approximation * (kThreeHalfs - (half_input * approximation * approximation));
+}
+
 #ifdef SIMD_DISABLED
 // Calculates the approximate complex magnude of z = real + i * imaginary.
 inline void ComplexMagnitude(float real, float imaginary, float* output) {
@@ -85,19 +99,6 @@ inline void ComplexMagnitude(float real, float imaginary, float* output) {
 #endif  // defined(SIMD_DISABLED)
 
 }  // namespace
-
-inline float FastReciprocalSqrt(float input) {
-    const float kThreeHalfs = 1.5f;
-    const uint32_t kMagicNumber = 0x5f3759df;
-
-    // Approximate a logarithm by aliasing to an integer.
-    uint32_t integer = *reinterpret_cast<uint32_t*>(&input);
-    integer = kMagicNumber - (integer >> 1);
-    float approximation = *reinterpret_cast<float*>(&integer);
-    const float half_input = input * 0.5f;
-    // One iteration of Newton's method.
-    return approximation * (kThreeHalfs - (half_input * approximation * approximation));
-}
 
 bool IsAligned(const float* pointer) {
     return IsAlignedTemplated<float>(pointer);

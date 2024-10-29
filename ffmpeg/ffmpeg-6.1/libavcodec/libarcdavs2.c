@@ -412,13 +412,13 @@ static int arcdavs2_receive_frame(AVCodecContext *avctx, AVFrame *frm)
 	return AVERROR(EAGAIN);
 }
 
-static av_cold int arcdavs2_decode_flush(AVCodecContext *avctx)
+static av_cold void arcdavs2_decode_flush(AVCodecContext *avctx)
 {
 	arcdavs2_context *h = avctx->priv_data;	
 	h->avs2_decoder_flush(h->decoder, true);
 	h->avs2_decoder_flush(h->decoder, false);
 
-	return 0;
+	return;
 }
 
 static av_cold int arcdavs2_decode_close(AVCodecContext *avctx)

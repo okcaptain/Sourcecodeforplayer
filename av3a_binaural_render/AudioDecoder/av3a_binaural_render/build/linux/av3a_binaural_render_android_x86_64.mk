@@ -7,17 +7,16 @@
 #NDK=/home/wwzhang/android-ndk
 TOOLCHAIN=$(NDK)/toolchains/llvm/prebuilt/linux-x86_64
 
-ARCH=arm64
-CPU=armv8-a
+ARCH=arm
+CPU=x86_64
 API=21
-CC=$(TOOLCHAIN)/bin/aarch64-linux-android$(API)-clang
-CXX=$(TOOLCHAIN)/bin/aarch64-linux-android$(API)-clang++
+CC=$(TOOLCHAIN)/bin/x86_64-linux-android$(API)-clang
+CXX=$(TOOLCHAIN)/bin/x86_64-linux-android$(API)-clang++
 SYSROOT=$(TOOLCHAIN)/sysroot
-CROSS=aarch64-linux-android
+CROSS=arm-linux-android
 CROSS_PREFIX=$(TOOLCHAIN)/bin/$(CROSS)
-PREFIX=/home/arcvideo/ljin/ffmpeg-6.1/android/$(CPU)
-OPTIMIZE_CFLAGS="-march=$(CPU)"
-
+OPTIMIZE_CFLAGS="-march=$(CPU) -mfloat-abi=softfp -mfpu=vfp -marm"
+ADDI_LDFLAGS="-ldl -L../dependency/linux/arm"
 
 ProjectName            :=av3a_binaural_render
 ConfigurationName      :=Release
@@ -43,7 +42,7 @@ OutputSwitch           :=-o
 LibraryPathSwitch      :=-L
 PreprocessorSwitch     :=-D
 SourceSwitch           :=-c 
-OutputFile             :=../../../../bin/arm64-v8a/lib$(ProjectName).a
+OutputFile             :=../../../../bin/x86_64/lib$(ProjectName).a
 # OutputFile             :=/mnt/data/local-disk1/yfxu/linux/lib$(ProjectName).so
 Preprocessors          :=$(PreprocessorSwitch)HAVE_CONFIG_H 
 ObjectSwitch           :=-o 
@@ -67,10 +66,10 @@ LibPath                := $(LibraryPathSwitch).
 AR       := ar rcus
 #CXX      := g++
 #CC       := gcc
-# CXXFLAGS := -std=c++11 -fPIC -g -Wall $(Preprocessors)
-# CFLAGS   := -fPIC -g -Wall $(Preprocessors)
 CXXFLAGS := -O3 -std=c++11 -fPIC -Wall $(Preprocessors)
 CFLAGS   := -O3 -fPIC -Wall $(Preprocessors)
+# CXXFLAGS := -std=c++11 -fPIC -g -Wall $(Preprocessors)
+# CFLAGS   := -fPIC -g -Wall $(Preprocessors)
 ASFLAGS  := 
 AS       := as
 
@@ -398,6 +397,6 @@ clean:
 	$(RM) $(IntermediateDirectory)/libsamplerate_src_zoh$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/libsamplerate_src_zoh$(PreprocessSuffix)
 	$(RM) $(OutputFile)
-# (RM) "../../../../myworkspace/.build-release/av3a_binaural_render"
+# $(RM) "../../../../myworkspace/.build-release/av3a_binaural_render"
 
 

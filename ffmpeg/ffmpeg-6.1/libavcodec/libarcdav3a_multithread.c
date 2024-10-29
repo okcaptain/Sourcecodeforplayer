@@ -98,21 +98,15 @@ typedef struct arcdav3a_context
 static int  InitRender(AVCodecContext *avctx, AVS3DecoderOutput* pOut)
 {
 	arcdav3a_context *h = avctx->priv_data;
-	h->renderhandle = dlopen("libav3a_binaural_render.so", RTLD_LAZY);
-	if(h->renderhandle == NULL)
-    {
-        av_log(avctx, AV_LOG_ERROR, "load libav3a_binaural_render.so failed: %s\n", dlerror());
-        return AVERROR(EFAULT);
-    }
-	h->CreateRenderer  = (PFCreateRenderer)dlsym(h->renderhandle, "CreateRenderer");
-	h->PutInterleavedAudioBuffer = (PFPutInterleavedAudioBuffer)dlsym(h->renderhandle, "PutInterleavedAudioBuffer");
-	h->GetBinauralInterleavedAudioBuffer = (PFGetBinauralInterleavedAudioBuffer)dlsym(h->renderhandle, "GetBinauralInterleavedAudioBuffer");
-	h->UpdateMetadata = (PFUpdateMetadata)dlsym(h->renderhandle, "UpdateMetadata");
-	h->SetListenerPosition = (PFSetListenerPosition)dlsym(h->renderhandle, "SetListenerPosition");
-	h->DestroyRenderer = (PFDestroyRenderer)dlsym(h->renderhandle, "DestroyRenderer");
 
+		h->CreateRenderer = CreateRenderer;
+		h->PutInterleavedAudioBuffer = PutInterleavedAudioBuffer;
+		h->GetBinauralInterleavedAudioBuffer = GetBinauralInterleavedAudioBuffer;
+		h->UpdateMetadata = UpdateMetadata;
+		h->SetListenerPosition = SetListenerPosition;
+		h->DestroyRenderer = DestroyRenderer;
 
-    if (h->CreateRenderer == NULL || h->PutInterleavedAudioBuffer == NULL || 
+		if (h->CreateRenderer == NULL || h->PutInterleavedAudioBuffer == NULL || 
 		h->GetBinauralInterleavedAudioBuffer == NULL || h->UpdateMetadata == NULL ||
 	    h->SetListenerPosition == NULL || h->DestroyRenderer == NULL)
     {
@@ -139,27 +133,17 @@ static av_cold int arcdav3a_decode_init(AVCodecContext *avctx)
 	arcdav3a_context *h = avctx->priv_data;
 	avctx->sample_fmt = AV_SAMPLE_FMT_S16;//for find_stream_info port to reduce time consuming
 	//avctx->ch_layout  = (AVChannelLayout)AV_CHANNEL_LAYOUT_STEREO;
-	if(!h->handle)
+
+	h->avs3_create_decoder = avs3_create_decoder;
+	h->avs3_destroy_decoder = avs3_destroy_decoder;
+	h->parse_header = parse_header;
+	h->avs3_decode = avs3_decode;
+
+	if (h->avs3_create_decoder == NULL || h->avs3_destroy_decoder == NULL ||
+			h->parse_header == NULL || h->avs3_decode == NULL)
 	{
-		h->handle = dlopen("libAVS3AudioDec.so", RTLD_LAZY);
-	}
-	
-    if(h->handle == NULL)
-    {
-        av_log(avctx, AV_LOG_ERROR, "load libAVS3AudioDec.so failed: %s\n", dlerror());
-        return AVERROR(EFAULT);
-    }
-
-	h->avs3_create_decoder  = (PFavs3_create_decoder)dlsym(h->handle, "avs3_create_decoder");
-	h->avs3_destroy_decoder = (PFavs3_destroy_decoder)dlsym(h->handle, "avs3_destroy_decoder");
-	h->parse_header = (PFparse_header)dlsym(h->handle, "parse_header");
-	h->avs3_decode = (PFavs3_decode)dlsym(h->handle, "avs3_decode");
-
-    if (h->avs3_create_decoder == NULL || h->avs3_destroy_decoder == NULL || 
-		h->parse_header == NULL || h->avs3_decode == NULL)
-    {
-        av_log(avctx, AV_LOG_ERROR, "get avs3 audio decoder api failed\n");
-        return AVERROR(EFAULT);
+		av_log(avctx, AV_LOG_ERROR, "get avs3 audio decoder api failed\n");
+		return AVERROR(EFAULT);
     }
 	if (!h->m_hAvs3)
 		h->m_hAvs3 = h->avs3_create_decoder();
